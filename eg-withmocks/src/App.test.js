@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import App from './App';
 import userEvent from '@testing-library/user-event';
 
@@ -17,6 +17,6 @@ test('Change Hi for Bye', async () => {
   userEvent.click(btn)
 
   // delectus aut autem
-  const element = await screen.getByText(/delectus aut autem/i); 
+  const element = await screen.findByText('delectus aut autem')  
   expect(element).toBeInTheDocument();
 });

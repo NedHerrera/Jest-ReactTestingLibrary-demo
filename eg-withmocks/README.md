@@ -35,11 +35,8 @@ export const handlers = [
     }),
     rest.get('http://localhost:3030/user', (req, res, ctx) => { 
         return res(
-            ctx.status(403),
-            ctx.json({
-            errorMessage: 'Not authorized',
-            }),
-        )
+            ctx.json({ title: 'delectus aut autem'})
+        );
     }),
 ]
 ```
@@ -66,10 +63,38 @@ Find and modify 'src/setupTests.js' file writting this:
 // src/setupTests.js
 import { server } from './mocks/server.js'
 
-beforeAll(() => server.listen())
+beforeAll(() => server.listen({ onUnhandledRequest: "bypass" }));
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
 ```
 
 ## Step 4: you are ready, go to axios!
 
+Implement your axio code. Jest will redirect your request to mock testing server.
+
+```js
+const getBye = async() => { // https://jsonplaceholder.typicode.com/todos/1
+    const res = await axios.get('http://localhost:3030/user')
+    .then( (response) => {
+      const theBye = response.data.title;
+      setItem(theBye)
+    })
+    .catch( error => console.error(error) )
+  }
+```
+
+# How should our test be?
+
+Our test must be async follow the next structure:
+
+```js
+test('this is a async test', async () => {
+  render(<YouComponent />);
+  const btn = screen.getByRole('button', { name: /Click me/i });
+  userEvent.click(btn)
+  const element = await screen.findByText('delectus aut autem')  
+  expect(element).toBeInTheDocument();
+});
+```
+
+The function must to be async and the screen getter will have an await.
